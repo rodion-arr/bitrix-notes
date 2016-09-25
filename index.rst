@@ -17,7 +17,7 @@ Contents:
    handlers
    orm
    cron
-   functions
+   function
    pdo
    other
 
