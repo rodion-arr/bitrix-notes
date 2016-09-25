@@ -3,15 +3,23 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to Bitrix Notes's documentation!
-========================================
+Welcome to Bitrix Notes's!
+==========================
 
 Contents:
 
 .. toctree::
    :maxdepth: 2
 
-
+   recipes
+   orders
+   seo
+   handlers
+   orm
+   cron
+   functions
+   pdo
+   other
 
 Indices and tables
 ==================
