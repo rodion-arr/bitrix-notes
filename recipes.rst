@@ -223,6 +223,43 @@ Read large CSV file
 Cashing example
 ---------------
 
+D7 style
+~~~~~~~~
+
+.. code-block:: php
+
+    <?php
+    use \Bitrix\Main\Data\Cache;
+
+    $cache = Cache::createInstance();
+    if ($cache->initCache(7200, "cache_key")) {
+        $vars = $cache->getVars();
+    }
+    elseif ($cache->startDataCache()) {
+        $cache->endDataCache(array("key" => "value"));
+    }
+
+    //public function initCache($TTL, $uniqueString, $initDir = false, $baseDir = "cache")
+
+Managed cache
+
+.. code-block:: php
+
+    <?php
+    $cache = \Bitrix\Main\Application::getInstance()->getManagedCache();
+    
+    if ($cache->read($cacheTtl, $cacheId)) {
+        $vars = $cache->get($cacheId);
+    } else {
+        $cache->set($cacheId, array("key" => $value));
+    }
+
+    //clear by tag
+    $cache->clean($cacheId);
+
+Old style
+~~~~~~~~~
+
 .. code-block:: php
 
     <?php
