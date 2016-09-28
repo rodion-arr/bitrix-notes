@@ -15,7 +15,7 @@ Contents:
    orders
    seo
    handlers
-   orm
+   d7
    cron
    function
    pdo

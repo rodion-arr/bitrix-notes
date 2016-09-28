@@ -1,0 +1,195 @@
+.. index::
+   single: Examples of Bitrix ORM using
+
+D7
+==
+
+This section contains scripts with example of using Bitrix D7 core
+
+ORM
+---
+
+Select with Query object
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. code-block:: php
+
+   <?php
+   use \Bitrix\Main\Loader;
+   use \Bitrix\Main\Entity\Query;
+   use \Bitrix\Crm\DealTable;
+
+   Loader::includeModule('crm');
+
+   $query = new Query(DealTable::getEntity());
+   $query->setFilter(array(
+       'STAGE_ID' => 'WON',
+   ));
+
+   $query->setSelect(array(
+       'ID',
+       'LEAD_DATE_CREATE' => 'LEAD_BY.DATE_CREATE',
+       'CONTACT_DATE_CREATE' => 'CONTACT_BY.DATE_CREATE',
+       'USER_ASSIGNED' => 'CONTACT_BY.ASSIGNED_BY_ID',
+       'CLOSEDATE' => 'CLOSEDATE',
+       'MONEY' => 'OPPORTUNITY',
+       'CURRENCY' => 'CURRENCY_ID'
+   ));
+
+   $result = $query->exec();
+
+   $deals = array();
+   while ($arDeal = $result->fetch()) {
+
+   }
+
+Select with Entity object
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. code-block:: php
+
+   <?php
+   use \Bitrix\Main\Loader;
+   use \Bitrix\Crm\DealTable;
+
+   Loader::includeModule('crm');
+
+   $deals = DealTable::getList([
+       'filter' => [
+           'ID' => $dealId
+       ]
+   ])->fetch();
+
+Join with ORM
+~~~~~~~~~~~~~
+
+.. code-block:: php
+
+   <?php
+
+   use \Bitrix\Main\Loader;
+   use \Bitrix\Main\Entity\Query;
+   use \Bitrix\Crm\DealTable;
+
+   Loader::includeModule('crm');
+
+   $arResult = array();
+   $query = new Query(LeadTable::getEntity());
+   $query
+       //JOIN for b_crm_status table
+       ->registerRuntimeField(
+           'STATUSES',
+           array(
+               'data_type' => '\\Bitrix\\Crm\\StatusTable',
+               'reference' => array(
+                   '=this.STATUS_ID' => 'ref.STATUS_ID',
+                   '=ref.ENTITY_ID' => new SqlExpression('"STATUS"')
+               ),
+           )
+       )
+       ->setSelect(array('STATUS_NAME' => 'STATUSES.NAME'))
+       ->setFilter(
+           array(
+               'ID' => $dealId,
+           )
+       )
+       ->setOrder(array('DATE_CREATE' => 'ASC'));
+
+   $result = $query->exec();
+
+   while ($arLead = $result->fetch()) {
+       $arResult[] = $arLead;
+   }
+
+Bitrix\\Main\\Application
+-------------------------
+
+.. code-block:: php
+
+   <?php
+   use Bitrix\Main\Application;
+
+   $application = Application::getInstance();
+
+   $docRoot = Application::getDocumentRoot();
+   $connection = Application::getConnection();
+
+Bitrix\\Main\\Context
+---------------------
+
+.. code-block:: php
+
+   <?php
+   use Bitrix\Main\Application;
+   use Bitrix\Main\Context;
+
+   $context = Application::getInstance()->getContext();
+   //$context = Context::getCurrent();
+
+   $request = $context->getRequest();
+   $server = $context->getServer();
+   $siteId = $context->getSite();
+   $langId = $context->getLanguage();
+
+Bitrix\\Main\\Request
+---------------------
+
+.. code-block:: php
+
+   <?php
+   use Bitrix\Main\Context;
+   use Bitrix\Main\Request;
+
+   $context = Context::getCurrent();
+
+   $request = $context->getRequest();
+   //$request = Context::getCurrent()->getRequest();
+
+   $value = $request->get("param");
+   $value = $request["param"];
+   $value = $request->getQuery("param");
+   $values = $request->getQueryList();
+   $value = $request->getPost("param");
+   $values = $request->getPostList();
+   $value = $request->getFile("param");
+   $values = $request->getFileList();
+   $value = $request->getCookie("param");
+   $values = $request->getCookieList();
+
+   $method = $request->getRequestMethod();
+   $flag = $request->isGet();
+   $flag = $request->isPost();
+   $flag = $request->isAjaxRequest();
+   $flag = $request->isHttps();
+
+   $flag = $request->isAdminSection();
+   $requestUri = $request->getRequestUri();
+   $requestPage = $request->getRequestedPage();
+   $rDir  = $request->getRequestedPageDirectory();
+
+Bitrix\\Main\\Server
+--------------------
+
+.. code-block:: php
+
+   <?php
+   use Bitrix\Main\Context;
+   use Bitrix\Main\Server;
+
+   $context = Context::getCurrent();
+
+   $server = $context->getServer();
+   //$server = Context::getCurrent()->getServer();
+
+   $server->getDocumentRoot();
+   $server->getPersonalRoot();
+   $server->getHttpHost();
+   $server->getServerName();
+   $server->getServerAddr();
+   $server->getServerPort();
+   $server->getRequestUri();
+   $server->getRequestMethod();
+   $server->getPhpSelf();
+   $server->getScriptName();
+   $server->get('HTTP_ACCEPT');
+
