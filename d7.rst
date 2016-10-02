@@ -193,3 +193,87 @@ Bitrix\\Main\\Server
    $server->getScriptName();
    $server->get('HTTP_ACCEPT');
 
+Files and directories operations
+--------------------------------
+
+Bitrix\\Main\\IO\\File
+~~~~~~~~~~~~~~~~~~~~~~
+
+.. code-block:: php
+
+   <?php
+   use Bitrix\Main\IO;
+   use Bitrix\Main\Application;
+
+   $file = new IO\File(Application::getDocumentRoot() . "/file.txt");
+
+   //file info
+   $isExist = $file->isExists();
+
+   $dir = $file->getDirectory();
+   $dir = $file->getDirectoryName();
+
+   $fileName = $file->getName();
+   $fileExt = $file->getExtension();
+   $fileSize = $file->getSize();
+   $contentType = $file->getContentType();
+
+   $createdAt = $file->getCreationTime();
+   $accessAt = $file->getLastAccessTime();
+   $modifiedAt = $file->getModificationTime();
+
+   $perms = $file->getPermissions();
+   $perms = substr(sprintf('%o', $file->getPermissions()), -3);
+
+   //file operations
+   $content = $file->getContents();
+   $file->putContents("data");
+   $file->putContents("data", IO\File::APPEND);
+   $file->readFile();
+
+   $file->rename(Application::getDocumentRoot() . "/new_file.txt");
+   $file->delete();
+
+Bitrix\\Main\\IO\\Directory
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. code-block:: php
+
+   <?php
+   use Bitrix\Main\IO;
+   use Bitrix\Main\Application;
+
+   $dir = new IO\Directory(Application::getDocumentRoot() . "/test/");
+
+   $dir->create();
+
+   //dir info
+   $isExist = $dir->isExists();
+
+   $createdAt = $dir->getCreationTime();
+   $accessAt = $dir->getLastAccessTime();
+   $modifiedAt = $dir->getModificationTime();
+
+   $perms = $dir->getPermissions();
+   $perms = substr(sprintf('%o', $dir->getPermissions()), -3);
+
+   //dir operations
+   $childDir = $dir->createSubdirectory("child");
+   $dir->rename(Application::getDocumentRoot() . "/another_path/");
+   $dir->delete();
+
+   $files = $dir->getChildren();
+
+Bitrix\\Main\\IO\\Path
+~~~~~~~~~~~~~~~~~~~~~~
+
+.. code-block:: php
+
+   <?php
+   use Bitrix\Main\IO;
+   use Bitrix\Main\Application;
+
+   $path = Application::getDocumentRoot() . "/some_dir/some_file.ext";
+   $fileExt = IO\Path::getExtension($path);
+   $fileName = IO\Path::getName($path);
+   $fileDir = IO\Path::getDirectory($path);
