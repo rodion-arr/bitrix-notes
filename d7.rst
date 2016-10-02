@@ -443,3 +443,79 @@ Bitrix\\Main\\IO\\Path
    $fileExt = IO\Path::getExtension($path);
    $fileName = IO\Path::getName($path);
    $fileDir = IO\Path::getDirectory($path);
+
+HTTP
+----
+
+.. code-block:: php
+
+   <?php
+   use \Bitrix\Main\Application;
+   use \Bitrix\Main\Web\Uri;
+   use \Bitrix\Main\Web\HttpClient;
+
+   //URI
+   $uri = new Uri("http://username:password@example.com/some/path/?param1=value#comments");
+
+   $uri->getLocator();
+   $uri->getUri();
+   $uri->getHost();
+   $uri->getUser();
+   $uri->getPass();
+   $uri->getPath();
+   $uri->getPathQuery();
+   $uri->getPort();
+   $uri->getQuery();
+   $uri->getScheme();
+   $uri->deleteParams(array("param1"));
+   $uri->getUri();
+   $uri->addParams(array("param2" => "value"));
+   $uri->getUri();
+
+   //HTTP Client
+   $options = array(
+       "redirect" => true,
+       "redirectMax" => 5,
+       "waitResponse" => true,
+       "socketTimeout" => 30,
+       "streamTimeout" => 60,
+       "version" => HttpClient::HTTP_1_0, // HttpClient::HTTP_1_0 or HttpClient::HTTP_1_1
+       "proxyHost" => "",
+       "proxyPort" => "",
+       "proxyUser" => "",
+       "proxyPassword" => "",
+       "compress" => false, // Accept-Encoding: gzip
+       "charset" => "", //request body charset
+       "disableSslVerification" => false,
+   );
+   $httpClient = new HttpClient($options);
+
+   //headers
+   $name = "User-Agent";
+   $value = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_3) AppleWebKit/537.75.14 (KHTML, like Gecko) Version/7.0.3 Safari/7046A194A";
+   $httpClient->setHeader($name, $value, true);
+
+   //cookies
+   $cookies = array(
+       "name" => "value",
+   );
+   $httpClient->setCookies($cookies);
+
+   //basic auth
+   $httpClient->setAuthorization($user, $pass);
+
+   //send request
+   //methods - HttpClient::HTTP_GET, HttpClient::HTTP_POST, HttpClient::HTTP_PUT, HttpClient::HTTP_HEAD и HttpClient::HTTP_PATCH.
+   $httpClient->query($method, $url, $entityBody = null);
+
+   //result
+   $httpClient->getResult();
+   $httpClient->getStatus();
+   $httpClient->getContentType();
+   $httpClient->getEffectiveUrl();
+   $httpClient->getCookies();
+   $httpClient->getHeaders();
+   $httpClient->getError();
+
+   //download file
+   $httpClient->download('http://example.com/file.pdf', Application::getDocumentRoot() . '/upload/example/document.pdf');
