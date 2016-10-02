@@ -320,8 +320,11 @@ Get Iblock id by it's code
         }
     }
 
+Admin section recipes
+---------------------
+
 Add custom page in admin section
---------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Add new folder under your ``local`` folder
 
@@ -441,6 +444,88 @@ Add new admin menu item
             );
         }
     }
+
+Custom order page
+~~~~~~~~~~~~~~~~~
+Info bar
+
+.. code-block:: php
+
+    <?php
+    $eventManager = \Bitrix\Main\EventManager::getInstance();
+    $eventManager->addEventHandler('sale', 'onSaleAdminOrderInfoBlockShow', 'onSaleAdminOrderInfoBlockShow');
+
+    function onSaleAdminOrderInfoBlockShow(\Bitrix\Main\Event $event)
+    {
+        $order = $event->getParameter("ORDER");
+        //$basket = $event->getParameter("ORDER_BASKET");
+
+        $propertyCollection = $order->getPropertyCollection();
+        $location = \Bitrix\Sale\Location\Admin\LocationHelper::getLocationStringByCode($propertyCollection->getDeliveryLocation()->getValue());
+
+        return new \Bitrix\Main\EventResult(
+            \Bitrix\Main\EventResult::SUCCESS,
+            array(
+                array(
+                    'TITLE' => 'Местоположение:',
+                    'VALUE' => $location,
+                    'ID' => 'location'
+                ),
+            )
+        );
+    }
+
+Tabs
+
+.. code-block:: php
+
+    <?php
+    $eventManager = \Bitrix\Main\EventManager::getInstance();
+    $eventManager->addEventHandler("main", "OnAdminSaleOrderView", array("MyAdminOrderFormTabs", "onInit"));
+
+    class MyAdminOrderFormTabs
+    {
+        function onInit()
+        {
+            return array(
+                "TABSET" => "MyTabs",
+                "GetTabs" => array("MyAdminOrderFormTabs", "getTabs"),
+                "ShowTab" => array("MyAdminOrderFormTabs", "showTabs"),
+                "Action" => array("MyAdminOrderFormTabs", "onSave"),
+                "Check" => array("MyAdminOrderFormTabs", "onBeforeSave"),
+            );
+        }
+
+        function getTabs($args)
+        {
+            return array(
+                array(
+                    "DIV" => "myTab1",
+                    "TAB" => "New Tab",
+                    "TITLE" => "New Tab Title",
+                    "SORT" => 1
+                )
+            );
+        }
+
+        function showTabs($tabName, $args, $varsFromForm)
+        {
+            if ($tabName == "myTab1") {
+                echo "Tab Content";
+            }
+        }
+
+        function onBeforeSave($args)
+        {
+            return true;
+        }
+
+        function onSave($args)
+        {
+            return true;
+        }
+    }
+
 
 Set price extra for all products
 --------------------------------
