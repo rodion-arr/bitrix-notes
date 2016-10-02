@@ -220,6 +220,29 @@ Read large CSV file
         return true;
     });
 
+Write CSV file
+--------------
+
+.. code-block:: bash
+
+    $ composer require league/csv:^8.0
+
+.. code-block:: php
+
+    <?php
+    use Bitrix\Main\Application;
+    use League\Csv\Writer;
+
+    $root = Application::getDocumentRoot();
+
+    $writer = Writer::createFromPath($root.'/upload/your.csv', 'w');
+    $writer->setDelimiter(';');
+    $writer->insertOne(['col1', 'col2']);
+
+    foreach ($data as $item) {
+        $writer->insertOne([$item['field1'], $item['field2']]);
+    }
+
 Cashing example
 ---------------
 
