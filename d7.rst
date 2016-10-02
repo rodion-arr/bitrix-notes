@@ -193,6 +193,86 @@ Bitrix\\Main\\Server
    $server->getScriptName();
    $server->get('HTTP_ACCEPT');
 
+Basket
+------
+
+Bitrix\\Sale\\Basket
+~~~~~~~~~~~~~~~~~~~~
+
+.. code-block:: php
+
+   <?php
+   use Bitrix\Sale;
+
+   //cur user basket
+   $basket = Sale\Basket::loadItemsForFUser(Sale\Fuser::getId(), Bitrix\Main\Context::getCurrent()->getSite());
+
+   //order's basket
+   $basket = Sale\Order::load($orderId)->getBasket();
+
+   $price = $basket->getPrice();
+   $fullPrice = $basket->getBasePrice();
+   $weight = $basket->getWeight();
+
+   //add to basket
+   if ($item = $basket->getExistsItem('catalog', $productId)) {
+       $item->setField('QUANTITY', $item->getQuantity() + $quantity);
+   } else {
+       $item = $basket->createItem('catalog', $productId);
+       $item->setFields(array(
+           'QUANTITY' => $quantity,
+           'CURRENCY' => \Bitrix\Currency\CurrencyManager::getBaseCurrency(),
+           'LID' => \Bitrix\Main\Context::getCurrent()->getSite(),
+           'PRODUCT_PROVIDER_CLASS' => 'CCatalogProductProvider',
+       ));
+   }
+   $basket->save();
+
+   //delete basket item
+   $basket->getItemById($id)->delete();
+   $basket->save();
+
+   //CAN_BUY=Y items
+   $orderBasket = $basket->getOrderableItems();
+
+Bitrix\\Sale\\BasketItem
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. code-block:: php
+
+   <?php
+   use Bitrix\Sale;
+
+   $basketItems = $basket->getBasketItems();
+
+   foreach ($basket as $basketItem) {
+       echo $basketItem->getField('NAME') . ' - ' . $basketItem->getQuantity() . '<br />';
+   }
+
+   $item = $basketItems[0];
+   $item->getId();
+   $item->getProductId();
+   $item->getPrice();
+   $item->getQuantity();
+   $item->getFinalPrice();
+   $item->getWeight();
+   $item->getField('NAME');
+   $item->canBuy();
+   $item->isDelay();
+
+   $item->getPropertyCollection();
+   $item->getCollection();
+
+   //operations
+   $item->setField('QUANTITY', $quantity);
+   $item->setFields(array(
+       'QUANTITY' => $quantity,
+       'CUSTOM_PRICE' => $customPrice,
+   ));
+
+   $item->delete();
+   $item->save(); //or $basket->save();
+
 Files and directories operations
 --------------------------------
 
