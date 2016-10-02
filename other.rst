@@ -133,3 +133,11 @@ Using Monolog
    $log->pushHandler($stream);
 
    $log->addDebug('LOG MESSAGE');
+
+Update 1C exchange module error
+-------------------------------
+
+.. code-block:: php
+
+   COption::SetOptionString("catalog", "DEFAULT_SKIP_SOURCE_CHECK", "Y");
+   COption::SetOptionString("sale", "secure_1c_exchange", "N");
