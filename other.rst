@@ -141,3 +141,7 @@ Update 1C exchange module error
 
    COption::SetOptionString("catalog", "DEFAULT_SKIP_SOURCE_CHECK", "Y");
    COption::SetOptionString("sale", "secure_1c_exchange", "N");
+
+Reset module files
+------------------
+Head to ``/bitrix/admin/update_system.php?lang=ru&BX_SUPPORT_MODE=Y`` page and find 'System area' block
