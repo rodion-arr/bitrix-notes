@@ -273,6 +273,92 @@ Bitrix\\Sale\\BasketItem
    $item->delete();
    $item->save(); //or $basket->save();
 
+Order
+-----
+
+Bitrix\\Sale\\Order
+~~~~~~~~~~~~~~~~~~~
+
+.. code-block:: php
+
+   <?php
+   use Bitrix\Sale;
+
+   $order = Sale\Order::load($orderId);
+
+   //fields
+   $order->getId();
+   $order->getSiteId();
+   $order->getDateInsert();
+   $order->getPersonTypeId();
+   $order->getUserId();
+
+   $order->getPrice();
+   $order->getDiscountPrice();
+   $order->getDeliveryPrice();
+   $order->getSumPaid();
+   $order->getCurrency();
+
+   $order->isPaid();
+   $order->isAllowDelivery();
+   $order->isShipped();
+   $order->isCanceled();
+
+   $allFields = $order->getAvailableFields();
+   $order->getField("ORDER_WEIGHT");
+   $order->getField('PRICE');
+
+   //change
+   $order->setField('USER_DESCRIPTION', 'Comment');
+   $order->save();
+
+   //payments and deliveries
+   $paymentIds = $order->getPaymentSystemId();
+   $deliveryIds = $order->getDeliverySystemId();
+
+   //discounts
+   $discountData = $order->getDiscount()->getApplyResult();
+
+   //basket
+   $order->setBasket($basket);
+   $basket = $order->getBasket();
+
+Bitrix\\Sale\\PropertyValue
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. code-block:: php
+
+   <?php
+   $propertyCollection = $order->getPropertyCollection();
+
+   $props = $propertyCollection->getArray();
+   $propGroups = $propertyCollection->getGroups();
+   $propsFromGroup = $propertyCollection->getGroupProperties($groupId);
+
+   $emailPropValue = $propertyCollection->getUserEmail();
+   $namePropValue = $propertyCollection->getPayerName();
+   $locPropValue = $propertyCollection->getDeliveryLocation();
+   $taxLocPropValue = $propertyCollection->getTaxLocation();
+   $profNamePropVal = $propertyCollection->getProfileName();
+   $zipPropValue = $propertyCollection->getDeliveryLocationZip();
+   $phonePropValue = $propertyCollection->getPhone();
+   $addressPropValue = $propertyCollection->getAddress();
+
+   $somePropValue = $propertyCollection->getItemByOrderPropertyId($orderPropertyId);
+   $somePropValue->getValue();
+   $somePropValue->getViewHtml();
+
+   $arProp = $somePropValue->getProperty();
+   $propId = $somePropValue->getPropertyId();
+   $propName = $somePropValue->getName();
+   $isRequired = $somePropValue->isRequired();
+   $propPerson = $somePropValue->getPersonTypeId();
+   $propGroup = $somePropValue->getGroupId();
+
+   //update
+   $somePropValue->setValue("value");
+   $order->save();
+
 Files and directories operations
 --------------------------------
 
