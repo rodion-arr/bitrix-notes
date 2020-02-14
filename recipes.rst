@@ -243,7 +243,7 @@ Write CSV file
         $writer->insertOne([$item['field1'], $item['field2']]);
     }
 
-Cashing example
+Caching example
 ---------------
 
 D7 style
